@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+
+  <meta charset="utf-8" />
+  <title>Task 8</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+  <script type="application/javascript">
+    $(document).ready(() => {
+      function createSearchForm() {
+        $("body").append(
+          `
+          <input type='text'/>
+          <input type='submit'/>
+          <ul></ul>
+          <ul id='pagination'></ul>
+          `
+        );
+        $('input:nth-of-type(2)').click(() => {
+          let text = $('input').val();
+          if (text) {
+            queryWikipedia(text);
+          } else {
+            alert("Input is empty");
+          }
+        });
+      }
+
+      function addNewArticle(id, title, snippet) {
+        $('ul').append(
+          `
+          <li> 
+            <p>
+              <span>${id} - <b>${title}</b></span>
+            </p>
+            </p> ${snippet} </p>
+          </li>
+          `
+        );
+      }
+
+      function queryWikipedia(search,offset = 0) {
+        const url = 'https://en.wikipedia.org/w/api.php';
+        $.ajax({
+          url: url + "?origin=*",
+          data: {
+            action: "query",
+            list: "search",
+            srsearch: search,
+            format: "json",
+            sroffset: offset,
+            srsort: "create_timestamp_desc"
+          },
+          success: (response) => {
+            $('ul').first().empty();
+            if (response.query && response.query.search && response.query.searchinfo) {
+              const articles = response.query.search;
+              for (let article of articles) {
+                addNewArticle(article.pageid, article.title, article.snippet);
+              }
+              buildPagination(response.query.searchinfo.totalhits, 10 , offset);
+            }
+          },
+          error: (err) => {
+            alert("Unable to fetch data from wikipedia");
+          }
+        });
+      }
+
+      function buildPagination(numberOfItems, itemsPerPage, currentOffset) {
+        $("#pagination").empty();
+        for (let page = 1; page <= Math.floor(numberOfItems / itemsPerPage); page++) {
+          $pagination = $(`<li>${page}</li>`).css({
+            'cursor': 'pointer',
+            'margin-left': '10px',
+            'display': 'inline-block'
+          });
+
+          if(page === currentOffset + 1) {
+            $pagination.css('font-weight', 'bold');
+          }
+
+          $pagination.click(() => {
+            const search = $('input').val();
+            queryWikipedia(search, page - 1);
+          });
+
+          $('#pagination').append($pagination);
+        }
+      }
+      createSearchForm();
+    });
+
+  </script>
+</body>
+
+</html>
