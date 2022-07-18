@@ -1,11 +1,11 @@
-const express = require("express");
-const router = require("./routes/index");
+import express from 'express';
+import controllerRouting from './routes/index';
 
 const app = express();
-const PORT = 12345;
+const port = 1245;
 
-app.use("/", router);
+controllerRouting(app);
 
-app.listen(PORT);
+app.listen(port, () => { });
 
-module.exports = app;
+export default app;
