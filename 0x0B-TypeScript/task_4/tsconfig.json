@@ -3,10 +3,10 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "ES6",
+    "module": "system",
     "target": "es5",
     "allowJs": true,
     "moduleResolution": "node",
-    "skipLibCheck": true
+    "outFile": "main.js"
   }
 }
