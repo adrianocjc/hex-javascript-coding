@@ -14,7 +14,7 @@ const cTeacher: Subjects.TeacherInterface = {
   experienceTeachingC: 10
 };
 
-console.log('Cpp');
+console.log('C++');
 cpp.setTeacher(cTeacher);
 console.log(cpp.getRequirements());
 console.log(cpp.getAvailableTeacher());
